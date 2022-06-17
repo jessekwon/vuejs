@@ -1,0 +1,197 @@
+node {
+    def PROJECT_NAME = "boardad"
+    def BRANCH = params.BRANCH
+    def DOCKER_HOME = "192.168.20.101:5000"
+    def DOCKER_NAME = "'" + PROJECT_NAME + "'"
+    def DOCKER_PATH = "'/ktds/'" + DOCKER_NAME
+    def DOCKER_TAG = "'ktds/'" + DOCKER_NAME
+    def WEB_PORT = params.WEB_PORT
+    def WEB_PORT_TO = 8080
+    def WEB_SSH_1 = '-p2022 web03@192.168.20.101'
+    def WEB_SSH_2 = '-p2022 web03@192.168.10.51'
+    def WEB_SSH_3 = '-p2022 web03@192.168.20.50'
+    def PROFILE = 'dev'
+    def TAG_1 = 'DEV'
+    def TAG_2 = 'ORIGIN02'
+    def TAG_3 = 'ORIGIN03'
+    def ENCODE_DNS = "'kencode.vrixon.com:1.201.161.162'"
+    print 'BRANCH : ' + BRANCH
+
+    //DEV, PROD별로 도커 이미지 내 환경변수가 다르므로 구분해야 한다.
+    def VERSION = 'dev'
+    print 'VERSION : ' + VERSION
+
+    def IS_ROLL_BACK = params.IS_ROLL_BACK
+    print 'IS_ROLL_BACK : ' + IS_ROLL_BACK
+
+    def IS_DEV_IMAGE = params.IS_DEV_IMAGE
+    print 'IS_DEV_IMAGE : ' + IS_DEV_IMAGE
+
+    print params
+    
+    // stage('GIT PULL') {
+    //     sh(script: 'rm -rf ./app.jar')
+    //     checkout([
+    //             $class: 'GitSCM',
+    //             branches: scm.branches,
+    //             doGenerateSubmoduleConfigurations: true,
+    //             extensions: scm.extensions + [[$class: 'SubmoduleOption', parentCredentials: true]],
+    //             userRemoteConfigs: scm.userRemoteConfigs
+    //     ])
+    // }
+
+    // stage('Build') {
+
+    //     JDK_EXIST_2 = sh (
+    //             script: 'docker images ktds/boardad-jdk11 | wc -l',
+    //             returnStdout: true
+    //     ).trim();
+
+    //     if(JDK_EXIST_2 != '2'){
+    //         sh(script: 'docker-compose -f devops/'+PROFILE+'/docker-compose.yml build jdk')
+    //     }
+
+    //     sh(script: 'pwd')
+    //     sh(script: 'ls -al')
+    //     sh(script: 'docker exec gradle /bin/bash -c "rm -rf /workspace/' + PROJECT_NAME + '/" ')
+    //     sh(script: 'docker exec gradle bash -c "mkdir -p /workspace/' + PROJECT_NAME + '/" ')
+    //     sh(script: 'ls -SF | xargs -I{} docker cp "{}" gradle:/workspace/' + PROJECT_NAME + '/ ')
+    //     sh(script: 'docker exec gradle /bin/bash -c "gradle bootJar -x test -i --stacktrace -p /workspace/' + PROJECT_NAME + '/" ')
+    //     sh(script: 'docker exec gradle /bin/bash -c "cp /workspace/' + PROJECT_NAME + '/build/libs/*.jar /workspace/' + PROJECT_NAME + '/build/app.jar" ')
+    //     sh(script: 'docker cp gradle:/workspace/' + PROJECT_NAME + '/build/app.jar ./ ')
+    //     sh(script: 'ls -al')
+    //     sh(script: 'docker-compose -f devops/' + PROFILE + '/docker-compose.yml build app')
+
+    // }
+
+    // stage('Tag') {
+    //     sh(script: 'docker tag ' + DOCKER_TAG + ' ' + DOCKER_HOME + DOCKER_PATH + ':' + VERSION)
+    //     sh(script: 'docker tag ' + DOCKER_TAG + ' ' + DOCKER_TAG + ':' + VERSION)
+    // }
+
+    // stage('Push') {
+    //     sh(script: 'docker push ' + DOCKER_HOME + DOCKER_PATH + ':' + VERSION)
+
+    //     try {
+    //         sh(script: 'docker rmi $(docker images -q --filter "dangling=true")')
+    //         print "None 이미지 삭제"
+    //     } catch (all) {
+    //         print "None 이미지 삭제 오류 : " + all
+    //     }
+
+    // }
+
+    // stage('Deploy ' + TAG_1) {
+    //     try {
+
+    //         sh 'ssh  ' + WEB_SSH_1 + ' docker pull ' + DOCKER_HOME + DOCKER_PATH + ':' + VERSION
+
+    //         try {
+    //             sh(script: 'ssh ' + WEB_SSH_1 + ' docker stop ' + DOCKER_NAME)
+    //             print "기존 컨테이너 중지 완료 "
+    //         } catch (all) {
+    //             print "기존 컨테이너 중지 오류 : " + all
+    //         }
+
+    //         try {
+    //             sh(script: 'ssh  ' + WEB_SSH_1 + ' docker rm ' + DOCKER_NAME)
+    //             print "기존 컨테이너 삭제 완료 "
+    //         } catch (all) {
+    //             print "기존 컨테이너 삭제 오류 : " + all
+    //         }
+
+    //         sh 'ssh  ' + WEB_SSH_1 + ' docker run  -d ' \
+    //             + ' --name ' + DOCKER_NAME + ' -v /storage:/storage -v /data/board_std:/data/board_std ' \
+    //             + ' -p ' + WEB_PORT + ':' + WEB_PORT_TO  \
+    //             + ' --add-host=' + ENCODE_DNS \
+    //             + ' ' + DOCKER_HOME + DOCKER_PATH + ':' + VERSION
+
+    //         try {
+    //             sh(script: 'ssh  ' + WEB_SSH_1 + ' docker rmi $(docker images -f "dangling=true" -q)')
+    //             print "None 이미지 삭제"
+    //         } catch (all) {
+    //             print "None 이미지 삭제 오류 : " + all
+    //         }
+
+    //         print TAG_1 + ' 배포 성공'
+    //     } catch (err) {
+    //         print TAG_1 + ' 배포 실패'
+    //     }
+    // }
+
+    // stage('Deploy ' + TAG_2) {
+    //     try {
+
+    //         sh 'ssh  ' + WEB_SSH_2 + ' docker pull ' + DOCKER_HOME + DOCKER_PATH + ':' + VERSION
+
+    //         try {
+    //             sh(script: 'ssh ' + WEB_SSH_2 + ' docker stop ' + DOCKER_NAME)
+    //             print "기존 컨테이너 중지 완료 "
+    //         } catch (all) {
+    //             print "기존 컨테이너 중지 오류 : " + all
+    //         }
+
+    //         try {
+    //             sh(script: 'ssh  ' + WEB_SSH_2 + ' docker rm ' + DOCKER_NAME)
+    //             print "기존 컨테이너 삭제 완료 "
+    //         } catch (all) {
+    //             print "기존 컨테이너 삭제 오류 : " + all
+    //         }
+
+    //         sh 'ssh  ' + WEB_SSH_2 + ' docker run  -d ' \
+    //             + ' --name ' + DOCKER_NAME + ' -v /storage:/storage -v /data/board_std:/data/board_std ' \
+    //             + ' -p ' + WEB_PORT + ':' + WEB_PORT_TO  \
+    //             + ' --add-host=' + ENCODE_DNS \
+    //             + ' ' + DOCKER_HOME + DOCKER_PATH + ':' + VERSION
+
+    //         try {
+    //             sh(script: 'ssh  ' + WEB_SSH_2 + ' docker rmi $(docker images -f "dangling=true" -q)')
+    //             print "None 이미지 삭제"
+    //         } catch (all) {
+    //             print "None 이미지 삭제 오류 : " + all
+    //         }
+
+    //         print TAG_2 + ' 배포 성공'
+    //     } catch (err) {
+    //         print TAG_2 + ' 배포 실패'
+    //     }
+    // }
+
+    // stage('Deploy ' + TAG_3) {
+    //     try {
+
+    //         sh 'ssh  ' + WEB_SSH_3 + ' docker pull ' + DOCKER_HOME + DOCKER_PATH + ':' + VERSION
+
+    //         try {
+    //             sh(script: 'ssh ' + WEB_SSH_3 + ' docker stop ' + DOCKER_NAME)
+    //             print "기존 컨테이너 중지 완료 "
+    //         } catch (all) {
+    //             print "기존 컨테이너 중지 오류 : " + all
+    //         }
+
+    //         try {
+    //             sh(script: 'ssh  ' + WEB_SSH_3 + ' docker rm ' + DOCKER_NAME)
+    //             print "기존 컨테이너 삭제 완료 "
+    //         } catch (all) {
+    //             print "기존 컨테이너 삭제 오류 : " + all
+    //         }
+
+    //         sh 'ssh  ' + WEB_SSH_3 + ' docker run  -d ' \
+    //             + ' --name ' + DOCKER_NAME + ' -v /storage:/storage -v /data/board_std:/data/board_std ' \
+    //             + ' -p ' + WEB_PORT + ':' + WEB_PORT_TO  \
+    //             + ' --add-host=' + ENCODE_DNS \
+    //             + ' ' + DOCKER_HOME + DOCKER_PATH + ':' + VERSION
+
+    //         try {
+    //             sh(script: 'ssh  ' + WEB_SSH_3 + ' docker rmi $(docker images -f "dangling=true" -q)')
+    //             print "None 이미지 삭제"
+    //         } catch (all) {
+    //             print "None 이미지 삭제 오류 : " + all
+    //         }
+
+    //         print TAG_3 + ' 배포 성공'
+    //     } catch (err) {
+    //         print TAG_3 + ' 배포 실패'
+    //     }
+    // }
+}

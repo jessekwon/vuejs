@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  dep:
+    container_name: ktds/boardad-dep
+    image: ktds/boardad-dep
+    build:
+      context: ../../
+      dockerfile: ./devops/dep.dockerfile
+  compile:
+    container_name: ktds/boardad-cache
+    image: ktds/boardad-cache
+    build:
+      context: ../../
+      dockerfile: ./devops/compile.dockerfile
+  cache:
+    container_name: ktds/boardad-cache
+    image: ktds/boardad-cache
+    build:
+      context: ../../
+      dockerfile: ./devops/cache.dockerfile
+  jdk:
+    container_name: ktds/boardad-jdk11
+    image: ktds/boardad-jdk11
+    build:
+      context: ../../
+      dockerfile: ./devops/jdk11.dockerfile
+  app:
+    container_name: boardad
+    image: ktds/boardad
+    build:
+      context: ../../
+      dockerfile: ./devops/dev/app.dockerfile
