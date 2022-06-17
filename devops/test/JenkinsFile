@@ -27,18 +27,21 @@ node {
     def IS_DEV_IMAGE = params.IS_DEV_IMAGE
     print 'IS_DEV_IMAGE : ' + IS_DEV_IMAGE
 
+    
     print params
     
-    // stage('GIT PULL') {
-    //     sh(script: 'rm -rf ./app.jar')
-    //     checkout([
-    //             $class: 'GitSCM',
-    //             branches: scm.branches,
-    //             doGenerateSubmoduleConfigurations: true,
-    //             extensions: scm.extensions + [[$class: 'SubmoduleOption', parentCredentials: true]],
-    //             userRemoteConfigs: scm.userRemoteConfigs
-    //     ])
-    // }
+    stage('GIT PULL') {
+        sh(script: 'rm -rf ./app.jar')
+        checkout([
+                $class: 'GitSCM',
+                branches: scm.branches,
+                doGenerateSubmoduleConfigurations: true,
+                extensions: scm.extensions + [[$class: 'SubmoduleOption', parentCredentials: true]],
+                userRemoteConfigs: scm.userRemoteConfigs
+        ])
+    }
+
+    print params
 
     // stage('Build') {
 
