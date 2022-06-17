@@ -29,7 +29,10 @@ node {
 
     
     print params
-    
+
+    stage('INFO') {
+        sh (script: 'pwd')
+    }
     stage('GIT PULL') {
         sh(script: 'rm -rf ./app.jar')
         checkout([
