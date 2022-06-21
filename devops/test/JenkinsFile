@@ -17,18 +17,12 @@ node {
     def ENCODE_DNS = "'kencode.vrixon.com:1.201.161.162'"
     print 'BRANCH : ' + BRANCH
 
+
+    def WEB_SSH_TEST = 'root@172.17.0.3'
     //DEV, PROD별로 도커 이미지 내 환경변수가 다르므로 구분해야 한다.
     def VERSION = 'dev'
     print 'VERSION : ' + VERSION
 
-    def IS_ROLL_BACK = params.IS_ROLL_BACK
-    print 'IS_ROLL_BACK : ' + IS_ROLL_BACK
-
-    def IS_DEV_IMAGE = params.IS_DEV_IMAGE
-    print 'IS_DEV_IMAGE : ' + IS_DEV_IMAGE
-
-    
-    print params
 
     stage('INFO') {
         sh (script: 'pwd')
@@ -43,8 +37,9 @@ node {
                 userRemoteConfigs: scm.userRemoteConfigs
         ])
     }
-
-    print params
+     stage('Build') {
+        sh 'ssh  ' + WEB_SSH_TEST + ' pwd'
+     }
 
     // stage('Build') {
 
