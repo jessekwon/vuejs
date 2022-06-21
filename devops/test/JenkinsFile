@@ -38,6 +38,7 @@ node {
         ])
     }
      stage('Build') {
+         sh(script: 'id')
         sh 'ssh  ' + WEB_SSH_TEST + ' id'
         sh 'ssh  ' + WEB_SSH_TEST + ' pwd'
      }
